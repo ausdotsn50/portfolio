@@ -1,8 +1,8 @@
 export default function Home() {
   return (
-      <main>
+      <main className="bg-black-100">
         <div>
-          <h1>Initial commit</h1>
+          <h1 className="text-red-400">Initial commit</h1>
         </div>
       </main>
   );

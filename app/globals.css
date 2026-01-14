@@ -1,1 +1,7 @@
+/* To add prefix @import "tailwindcss" prefix(here) */
 @import "tailwindcss";
+
+/* Tailwind for 4 theme config*/
+@theme {
+    --color-black-100: #201e1e;
+}
