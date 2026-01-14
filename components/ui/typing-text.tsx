@@ -187,7 +187,7 @@ const TypingText = ({
                 ref={cursorRef}
                 className={`inline-block opacity-100 ${shouldHideCursor ? 'hidden' : ''} ${
                     cursorCharacter === '|'
-                        ? `h-5 w-[1px] translate-y-1 bg-foreground ${cursorClassName}`
+                        ? `h-9 md:h-11 lg:h-13 w-[10px] translate-y-1 bg-red-100 ${cursorClassName}`
                         : `ml-1 ${cursorClassName}`
                 }`}
             >

@@ -11,24 +11,22 @@ const Hero = () => {
                 <SpotlightNew/>
             </div>
 
-            {/* div for hero section text */}
-            <div className="flex justify-center">
-                <div className="">
-                    {/*
-                    <TextGenerateEffect
-                        className="text-center text-[40px] text-white md:text-5xl lg:text-6xl"
-                        words="Hello, world!"
-                        //duration={2} --> in seconds
-                    />
-                    <TypewriterEffect
-                        words={[{text: "Hello,"}, {text: "world"}]}
-                    />
-                    */}
+            <div className="flex justify-center relative my-20">
+                {/* div for hero section text */}
+                <div className="text-center text-white max-w-[89vw] md:max-w-2xl lg:max-w-[70vw] flex flex-col
+                    justify-center items-center">
                     <TypingText
-                        className="text-white"
-                        text={["Hello, world", "Otoke"]}
-                        typingSpeed={100} // Override typing and deleting speed
+                        className="text-[40px] md:text-5xl lg:text-6xl
+                        font-bold mb-2"
+                        text={["Hello, ", "Kumusta, "]}
+                        typingSpeed={100} // Override typingSpeed
+                        deletingSpeed={75} // Override deletingSPeed
                     />
+                    {/* Utility classes for text-breakpoints differentiated by 1-xl*/}
+                    <p className="sm:text-2xl md:text-3xl lg:text-4xl
+                        font-normal mb-2"> I&#39;m Angela Denise Almazan </p>
+                    <p className="sm:text md:text-2xl lg:text-3xl
+                        font-bold font-extralight"> Multimedia Editor & Computer Science Student </p>
                 </div>
             </div>
         </div>
