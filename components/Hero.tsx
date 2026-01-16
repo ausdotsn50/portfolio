@@ -1,11 +1,14 @@
 "use client"
 import {SpotlightNew} from "@/components/ui/spotlight-new";
 import TypingText from "@/components/ui/typing-text";
+import HeroButton from "@/components/ui/hero-button";
+import {InfiniteMovingCards} from "@/components/ui/infinite-moving-cards";
+import {techStack} from "@/data";
 
 const Hero = () => {
     return (
         // padding bottom 20, padding top 36
-        <div className="pb-20 pt-36">
+        <div className="pb-20 pt-20">
             {/* div for the spotlight fx*/}
             <div>
                 <SpotlightNew/>
@@ -26,7 +29,29 @@ const Hero = () => {
                     <p className="sm:text-2xl md:text-3xl lg:text-4xl
                         font-normal mb-2"> I&#39;m Angela Denise Almazan </p>
                     <p className="sm:text md:text-2xl lg:text-3xl
-                        font-bold font-extralight"> Multimedia Editor & Computer Science Student </p>
+                        font-extralight mb-6"> Multimedia Editor & Computer Science Student </p>
+
+                    {/* Hero section buttons */}
+                    <div className="flex gap-4 justify-evenly items-center mb-4">
+                        <a href="#projects">
+                            <HeroButton
+                                title="Explore Projects"
+                                color="transparent"
+                            />
+                        </a>
+
+                        <a href="#about">
+                            <HeroButton
+                                title="Get in Touch"
+                                color="transparent"
+                            />
+                        </a>
+                    </div>
+                    <InfiniteMovingCards
+                        items={
+                            techStack
+                        }
+                    />
                 </div>
             </div>
         </div>
