@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="41ecebd7-8f13-48bf-a2d5-d246aad5dba1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/typing-text.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/typing-text.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +67,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
@@ -103,7 +105,10 @@
       <workItem from="1768275267353" duration="97000" />
       <workItem from="1768360260300" duration="38000" />
       <workItem from="1768360360860" duration="9154000" />
-      <workItem from="1768376953962" duration="6541000" />
+      <workItem from="1768376953962" duration="7902000" />
+      <workItem from="1768392600700" duration="4690000" />
+      <workItem from="1768442593706" duration="2734000" />
+      <workItem from="1768477357596" duration="3447000" />
     </task>
     <servers />
   </component>
