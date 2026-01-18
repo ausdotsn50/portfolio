@@ -6,6 +6,7 @@ import {InfiniteMovingCards} from "@/components/ui/infinite-moving-cards";
 import {techStack} from "@/data";
 
 const Hero = () => {
+    const mid = Math.floor(techStack.length /2);
     return (
         // padding bottom 20, padding top 36
         <div className="pb-20 pt-20">
@@ -49,7 +50,12 @@ const Hero = () => {
                     </div>
                     <InfiniteMovingCards
                         items={
-                            techStack
+                            techStack.slice(0, mid)
+                        }
+                    />
+                    <InfiniteMovingCards
+                        items={
+                            techStack.slice(mid, techStack.length)
                         }
                     />
                 </div>
