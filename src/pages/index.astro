@@ -1,13 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
 ---
 
-<Layout>
+<Layout
+  title="Alex Mercer — Software Engineer"
+  description="Software engineer building tools for musicians and creative teams, based in Brooklyn, NY."
+>
   <a id="top"></a>
   <Navigation />
 
   <main>
-    {/* Sections (Hero, About, Selected Work, Contact) land here next */}
+    <Hero />
+    {/* About, Selected Work, Contact land here next */}
   </main>
 </Layout>
