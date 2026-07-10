@@ -1,0 +1,171 @@
+---
+import { Icon } from 'astro-icon/components';
+import VinylRecord from './VinylRecord.astro';
+
+// A "now playing" player styled as a vinyl disc-case. The playlist holds real
+// current focuses (edit freely); prev/next cycle them, play spins the record.
+interface Track {
+  title: string;
+  artist: string;
+}
+interface Props {
+  discLabel?: string;
+  playlist?: Track[];
+  class?: string;
+}
+const {
+  discLabel = 'ausdotsn50',
+  class: className = '',
+  playlist = [
+    { title: 'Computer Science @ UP Tacloban', artist: 'Coursework in software engineering, algorithmic design, and systems architecture'},
+    { title: 'GDFI website', artist: 'Recently shipped the official website for Guiuan Development Foundation Inc.' },  
+    { title: 'BetterAllen', artist: 'Actively contributing to the open-source site for the Municipality of Allen' },
+    { title: 'Undergraduate thesis', artist: 'Benchmarking Paillier and Exponential ElGamal on the Helios Voting System' },
+  ],
+} = Astro.props;
+
+const first = playlist[0];
+---
+
+<div
+  data-now-playing
+  class:list={[
+    'np-case relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-rule bg-gradient-to-b from-cream-deep to-cream p-5 shadow-xl',
+    className,
+  ]}
+>
+  <p class="flex items-center uppercase gap-2 font-ui text-micro tracking-[0.2em] text-accent-ink">    
+    <span class="relative flex h-2 w-2" aria-hidden="true">
+      <span
+        class="absolute inline-flex h-full w-full animate-ping rounded-full bg-burnt-orange opacity-75 motion-reduce:hidden"
+      />
+      <span class="relative inline-flex h-2 w-2 rounded-full bg-burnt-orange" />
+    </span>
+    Now Playing
+  </p>
+
+  <!-- Album art: the record (also a play toggle) -->
+  <button
+    type="button"
+    data-np-play
+    aria-pressed="false"
+    aria-label="Play"
+    class="group relative mt-4 grid aspect-square w-full place-items-center overflow-hidden rounded-xl border border-rule bg-[radial-gradient(circle_at_50%_40%,var(--cream-deep),var(--cream))] shadow-inner"
+  >
+
+    <VinylRecord
+      size={230}
+      label={discLabel}
+      class="transition-transform duration-300 group-hover:scale-[1.02] [filter:drop-shadow(0_14px_22px_rgba(0,0,0,0.35))]"
+    />
+  </button>
+
+  <!-- "Now Playing" indicator + track info -->
+  <div class="mt-4">
+    <div class="mt-1 min-h-[3.25rem]" aria-live="polite" aria-atomic="true">
+      <p class="font-display text-h4 leading-tight text-espresso" data-np-title>{first.title}</p>
+      <p class="mt-0.5 font-body text-small text-espresso-soft" data-np-artist>
+        {first.artist}
+      </p>
+    </div>
+  </div>
+
+  <!-- Scrubber -->
+  <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-rule">
+    <div data-np-progress class="np-progress h-full rounded-full bg-gradient-to-r from-burnt-orange to-mustard"></div>
+  </div>
+
+  <!-- Transport -->
+  <div class="mt-4 flex items-center justify-center gap-6">
+    <button
+      type="button"
+      data-np-prev
+      aria-label="Previous focus"
+      class="grid h-10 w-10 place-items-center rounded-full text-espresso transition-colors hover:bg-cream-deep hover:text-accent-ink"
+    >
+      <Icon
+        name="mage:previous-fill"
+        width="20" 
+        height="20" 
+        aria-hidden="true"
+      />
+    </button>
+
+    <button
+      type="button"
+      data-np-play
+      aria-pressed="false"
+      aria-label="Play"
+      class="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-burnt-orange to-mustard text-[#1c1410] shadow-md transition-opacity hover:opacity-90"
+    >
+      <Icon 
+        name="mdi:play"
+        class="np-icon-play" 
+        width="20" 
+        height="20" 
+        aria-hidden="true"
+      />
+
+      <Icon
+        name="material-symbols:pause"
+        class="np-icon-pause hidden" 
+        width="20" 
+        height="20" 
+        aria-hidden="true"
+      />
+    </button>
+
+    <button
+      type="button"
+      data-np-next
+      aria-label="Next focus"
+      class="grid h-10 w-10 place-items-center rounded-full text-espresso transition-colors hover:bg-cream-deep hover:text-accent-ink"
+    >
+      <Icon
+        name="mage:next-fill"
+        width="20" 
+        height="20" 
+        aria-hidden="true"
+      />
+    </button>
+  </div>
+
+  <script type="application/json" data-np-playlist set:html={JSON.stringify(playlist)} />
+</div>
+
+<script>
+  import '../scripts/now-playing.ts';
+</script>
+
+<style>
+  /* Ambient progress fill */
+  .np-progress {
+    width: 40%;
+  }
+  .is-playing .np-progress {
+    animation: np-progress 22s linear infinite;
+  }
+  @keyframes np-progress {
+    0% {
+      width: 6%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  /* Play/pause icon swap */
+  .is-playing .np-icon-play {
+    display: none;
+  }
+  .is-playing .np-icon-pause {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .is-playing .np-progress {
+      animation: none;
+      width: 40%;
+    }
+  }
+</style>

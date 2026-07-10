@@ -1,0 +1,115 @@
+---
+import { Icon } from "astro-icon/components";
+
+// Single-page navigation for the vinyl/jazz portfolio.
+// Links scroll to in-page sections; the theme toggle flips the
+
+const links = [
+  { label: 'About', href: '#about' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<nav
+  id="site-nav"
+  class="sticky top-0 z-50 border-b border-transparent bg-cream/95 backdrop-blur-sm transition-[box-shadow,border-color] duration-200 data-[scrolled]:border-rule data-[scrolled]:shadow-sm"
+>
+  <div
+    class="mx-auto grid max-w-content grid-cols-[1fr_auto] items-center gap-4 px-6 py-5 md:grid-cols-[1fr_auto_1fr]"
+  >
+    <a
+      href="#home"
+      class="group flex items-center gap-2 justify-self-start font-display text-h3 font-semibold italic text-espresso transition-opacity hover:opacity-70"
+    >
+      <Icon
+        class="text-burnt-orange not-italic"
+        name="mdi-light:music"
+        aria-hidden="true"
+      />
+      ausdotsn50
+    </a>
+
+    <ul class="hidden items-center gap-8 justify-self-center md:flex">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              data-navlink={link.href}
+              class="nav-link font-ui text-small font-medium text-espresso transition-opacity hover:opacity-70 aria-[current=true]:text-accent-ink"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center justify-self-end">
+      <button
+        id="theme-toggle"
+        type="button"
+        class="rounded-sm p-1 text-espresso transition-opacity hover:opacity-70"
+        aria-label="Toggle color theme"
+        title="Flip the record"
+      > 
+        {/* Sun — shown in dark mode (click to go light) */}
+        <Icon 
+          class="block h-[18px] w-[18px] 
+          dark:hidden" 
+          name="solar:sun-outline"
+          aria-hidden="true" 
+        />  
+        
+        {/* Moon — shown in light mode (click to go dark) */}
+        <Icon 
+          class="hidden h-[18px] w-[18px] 
+          dark:block" 
+          name="solar:moon-bold" 
+        />
+      </button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Scroll-state shadow/border
+  const nav = document.getElementById('site-nav');
+  const onScroll = () => {
+    if (window.scrollY > 20) nav?.setAttribute('data-scrolled', '');
+    else nav?.removeAttribute('data-scrolled');
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Theme toggle with persistence
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+
+  // Scrollspy — highlight the nav link for the section in view
+  const navLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-navlink]'),
+  );
+  const sections = navLinks
+    .map((link) => document.querySelector(link.getAttribute('data-navlink') ?? ''))
+    .filter((el): el is Element => el !== null);
+
+  if (sections.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach((link) => {
+            const match = link.getAttribute('data-navlink') === `#${entry.target.id}`;
+            link.setAttribute('aria-current', match ? 'true' : 'false');
+          });
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' },
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+</script>
