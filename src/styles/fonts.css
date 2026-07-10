@@ -1,0 +1,17 @@
+/* Self-hosted fonts via @fontsource (no Google CDN) */
+
+/* Display — Cormorant Garamond (variable, upright + italic covers 500/600) */
+@import '@fontsource-variable/cormorant-garamond/wght.css';
+@import '@fontsource-variable/cormorant-garamond/wght-italic.css';
+
+/* Body — EB Garamond (regular + italic for captions/footer) */
+@import '@fontsource/eb-garamond/400.css';
+@import '@fontsource/eb-garamond/400-italic.css';
+
+/* UI — Inter */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+
+/* Mono — JetBrains Mono */
+@import '@fontsource/jetbrains-mono/400.css';
