@@ -3,22 +3,24 @@ import NowPlaying from './NowPlaying.astro';
 ---
 <section id="hero" class="relative overflow-hidden">
   <div class="relative z-10 mx-auto max-w-content px-6 py-12 md:py-20">
-    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-12">
+    <div class="grid grid-cols-1 items-center gap-y-12 gap-x-8 md:grid-cols-12 lg:gap-16">
       <!-- Left: intro -->
-      <div class="lg:col-span-7">
+      <div class="md:col-span-6 lg:col-span-7">
 
         <h1 class="font-display font-medium leading-[1.05]">
-          <span class="block text-[clamp(2.5rem,8vw,5.5rem)] text-espresso-soft">Angela Denise</span>
-          <span class="block text-clamp(1.75rem,4vw,2.75rem) italic text-burnt-orange">Software Engineer</span>
+          <span class="block text-[clamp(2.5rem,7vw,5.5rem)] text-espresso-soft">Angela Denise</span>
+          <span class="block text-[clamp(1.75rem,4vw,2.75rem)] italic text-burnt-orange">Software Engineer</span>
         </h1>
 
-        <p class="mt-6 max-w-md font-body text-body-large text-espresso">
+        <p class="mt-6 md:max-w-md font-body text-body-large text-espresso">
           Shipping full-stack web and mobile apps for real communities. 
           From local businesses to governments and NGOs, I build clean, 
           dependable software with purpose.
         </p>
 
-        <div class="mt-8 flex flex-wrap gap-4">
+        <!-- CTAs + vinyl are hidden on the single-column (small) layout for a
+             cleaner, text-forward hero; both return at md when there's room. -->
+        <div class="mt-8 hidden flex-wrap gap-4 md:flex">
           <a
             href="#project"
             class="inline-flex items-center rounded-lg bg-gradient-to-br from-burnt-orange to-mustard px-6 py-3 font-ui text-small font-medium text-[#1c1410] transition-opacity hover:opacity-90"
@@ -35,7 +37,7 @@ import NowPlaying from './NowPlaying.astro';
       </div>
 
       <!-- Right: now-playing vinyl player -->
-      <div class="lg:col-span-5">
+      <div class="md:col-span-6 lg:col-span-5">
         <NowPlaying discLabel="ausdotsn50" />
       </div>
     </div>

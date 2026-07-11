@@ -58,9 +58,9 @@ const photos = files.map((file) => {
       <span class="h-px min-w-0 flex-1 bg-rule"></span>
     </div>
 
-    <div class="mt-8 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
+    <div class="mt-8 grid grid-cols-1 items-start gap-y-10 gap-x-8 md:grid-cols-12 lg:gap-16">
       <!-- Bio -->
-      <div class="lg:col-span-7">
+      <div class="md:col-span-6 lg:col-span-7">
         <h2
           class="font-display text-[clamp(2.5rem,5vw,3.35rem)] font-semibold leading-none text-espresso"
         >
@@ -85,7 +85,7 @@ const photos = files.map((file) => {
       </div>
 
       <!-- Portrait carousel as album art -->
-      <div class="lg:col-span-5">
+      <div class="md:col-span-6 lg:col-span-5">
         <figure class="mx-auto w-full max-w-sm" data-carousel>
           <div
             class="group relative aspect-square overflow-hidden rounded-xl border border-rule shadow-xl"
