@@ -1,5 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
+import Music from 'lucide-astro/Music';
+import Sun from 'lucide-astro/Sun';
+import Moon from 'lucide-astro/Moon';
 
 // Single-page navigation for the vinyl/jazz portfolio.
 // Links scroll to in-page sections; the theme toggle flips the
@@ -22,11 +24,7 @@ const links = [
       href="#home"
       class="group flex items-center gap-2 justify-self-start font-display text-h3 font-semibold italic text-espresso transition-opacity hover:opacity-70"
     >
-      <Icon
-        class="text-burnt-orange not-italic"
-        name="mdi-light:music"
-        aria-hidden="true"
-      />
+      <Music class="h-5 w-5 text-burnt-orange" aria-hidden="true" />
       ausdotsn50
     </a>
 
@@ -55,19 +53,10 @@ const links = [
         title="Flip the record"
       > 
         {/* Sun — shown in dark mode (click to go light) */}
-        <Icon 
-          class="block h-[18px] w-[18px] 
-          dark:hidden" 
-          name="solar:sun-outline"
-          aria-hidden="true" 
-        />  
-        
+        <Sun class="block h-[18px] w-[18px] dark:hidden" aria-hidden="true" />
+
         {/* Moon — shown in light mode (click to go dark) */}
-        <Icon 
-          class="hidden h-[18px] w-[18px] 
-          dark:block" 
-          name="solar:moon-bold" 
-        />
+        <Moon class="hidden h-[18px] w-[18px] dark:block" aria-hidden="true" />
       </button>
     </div>
   </div>
