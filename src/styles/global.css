@@ -27,9 +27,12 @@
   --rule: #d4c4a8;
   /* Darkened burnt-orange for small text / links on cream (WCAG AA) */
   --accent-ink: #a24512;
-  /* Ambient section glows — burnt-orange (top-right) + gold (bottom-left) */
-  --glow-warm: rgba(194, 90, 31, 0.1);
-  --glow-gold: rgba(200, 155, 60, 0.07);
+  /* Ambient section glows — burnt-orange (top-right) + gold (bottom-left).
+     A warm tint over the already-light, already-warm cream base barely shifts
+     luminance, so these need much more opacity than the dark palette to read
+     with comparable presence. */
+  --glow-warm: rgba(194, 90, 31, 0.3);
+  --glow-gold: rgba(200, 155, 60, 0.24);
 }
 
 .dark {
