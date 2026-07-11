@@ -1,0 +1,96 @@
+---
+import Music from 'lucide-astro/Music';
+import { experience } from '../data/experience';
+
+// Warm accent sequence from the Figma "Experience" cards
+// (burnt-orange → mustard → teal → sepia), cycled per entry.
+const accents = ['var(--burnt-orange)', 'var(--mustard)', 'var(--dusty-teal)', 'var(--sepia)'];
+---
+
+<section id="experience">
+  <div class="mx-auto max-w-content px-6 py-16 md:py-24">
+    <!-- Section label -->
+    <div class="flex items-center gap-3">
+      <Music class="h-4 w-4 text-accent-ink" aria-hidden="true" />
+      <span class="whitespace-nowrap font-ui text-micro uppercase tracking-[0.25em] text-espresso-soft">
+        Session Log
+      </span>
+      <span class="h-px min-w-0 flex-1 bg-rule"></span>
+    </div>
+
+    <h2
+      class="mt-6 font-display text-[clamp(2.5rem,5vw,3.35rem)] font-semibold leading-none text-espresso"
+    >
+      Experience
+    </h2>
+
+    <!-- Entry cards (Figma card styling: accent bar · record gutter · content) -->
+    <ol class="mt-12 flex flex-col gap-6">
+      {
+        experience.map((entry, i) => {
+          const accent = accents[i % accents.length];
+          const isPresent = /present/i.test(entry.period);
+          return (
+            <li>
+              <article class="flex overflow-hidden rounded-lg border border-rule bg-cream-deep shadow-sm">
+                {/* Left accent bar */}
+                <span class="w-1 shrink-0" style={`background:${accent}`} aria-hidden="true" />
+
+                {/* Gutter: mini record (groove ring) */}
+                <div
+                  class="flex w-14 shrink-0 items-center justify-center border-r border-rule"
+                  aria-hidden="true"
+                >
+                  <svg class="h-7 w-7" viewBox="0 0 24 24" style={`color:${accent}`}>
+                    <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5" />
+                    <circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4" />
+                    <circle cx="12" cy="12" r="3" fill="currentColor" />
+                  </svg>
+                </div>
+
+                {/* Content */}
+                <div class="min-w-0 flex-1 px-5 py-4">
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="font-display text-h4 font-semibold leading-tight text-espresso">
+                      {entry.role}
+                    </h3>
+                    {isPresent && (
+                      <span class="mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-burnt-orange px-2.5 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.15em] text-[#241812]">
+                        <span class="relative flex h-1.5 w-1.5">
+                          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#241812] opacity-60 motion-reduce:hidden" />
+                          <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#241812]" />
+                        </span>
+                        Live
+                      </span>
+                    )}
+                  </div>
+
+                  <p class="mt-1 font-body text-small italic text-espresso-soft">
+                    {entry.url ? (
+                      <a
+                        href={entry.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="underline-offset-2 transition-colors hover:text-accent-ink hover:underline"
+                      >
+                        {entry.company}
+                      </a>
+                    ) : (
+                      entry.company
+                    )}
+                  </p>
+
+                  <p class="mt-2 font-mono text-micro tracking-[0.05em] text-sepia">{entry.period}</p>
+
+                  <p class="mt-3 font-body text-body leading-relaxed text-espresso-soft">
+                    {entry.description}
+                  </p>
+                </div>
+              </article>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</section>
