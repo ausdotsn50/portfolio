@@ -27,6 +27,12 @@
   --rule: #d4c4a8;
   /* Darkened burnt-orange for small text / links on cream (WCAG AA) */
   --accent-ink: #a24512;
+  /* Ambient section glows — burnt-orange (top-right) + gold (bottom-left).
+     A warm tint over the already-light, already-warm cream base barely shifts
+     luminance, so these need much more opacity than the dark palette to read
+     with comparable presence. */
+  --glow-warm: rgba(194, 90, 31, 0.3);
+  --glow-gold: rgba(200, 155, 60, 0.24);
 }
 
 .dark {
@@ -42,16 +48,21 @@
   --rule: #3a3128;
   /* On the dark bg the standard burnt-orange already clears AA */
   --accent-ink: #e08a5a;
+  /* Glows read stronger over the darker Night base */
+  --glow-warm: rgba(217, 120, 67, 0.14);
+  --glow-gold: rgba(217, 176, 87, 0.1);
 }
 
 @layer base {
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+    /* Base page colour lives on <html> so the fixed glow layer on <body>
+       can sit above it and below content. */
+    background-color: var(--cream);
   }
 
   body {
-    background-color: var(--cream);
     color: var(--espresso);
     font-family: var(--font-ui);
     position: relative;
@@ -110,9 +121,22 @@
   }
 }
 
+/* Ambient warm glow — viewport-fixed so it spans the whole layout with no
+   per-section seams. Sits above the <html> base colour, below all content. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(50% 45% at 90% 12%, var(--glow-warm), transparent 62%),
+    radial-gradient(48% 45% at 8% 88%, var(--glow-gold), transparent 62%);
+  pointer-events: none;
+}
+
 /* Subtle paper-grain texture (desktop only) */
 @media (min-width: 768px) {
-  body::before {
+  body::after {
     content: '';
     position: fixed;
     inset: 0;
