@@ -1,15 +1,32 @@
 ---
 import '../styles/global.css';
+import { contact, socialLinks } from '../data/contact';
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const {
   title = 'Angela Denise Almazan — Software Engineer',
   description = 'Shipping full-stack web and mobile apps for real communities. From local businesses to governments and NGOs, I build clean, dependable software with purpose.',
+  image = "/about-carousel/02-Playing-guitar-at-Caba-Beach.webp",
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
+
+// Person schema for search engines — same contact data as the Outro/Footer.
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: contact.name,
+  jobTitle: 'Software Engineer',
+  email: contact.email,
+  url: Astro.site?.toString(),
+  sameAs: socialLinks.map((link) => link.href),
+};
 ---
 
 <!doctype html>
@@ -19,8 +36,30 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1c1814" />
+    <link rel="canonical" href={canonicalURL} />
+
     <meta name="description" content={description} />
     <title>{title}</title>
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={contact.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:locale" content="en_US" />
+
+    {/* Twitter Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+
     {/* Set theme before paint to avoid a flash of the wrong palette */}
     <script is:inline>
       (() => {
