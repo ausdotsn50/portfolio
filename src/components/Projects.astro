@@ -1,0 +1,113 @@
+---
+import Music from 'lucide-astro/Music';
+import { getCollection } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+import ProjectModal from './ProjectModal.astro';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+---
+
+<section id="projects" class="overflow-hidden">
+  <div class="mx-auto max-w-content px-6 py-16 md:py-24">
+    <!-- Section label -->
+    <div class="flex items-center gap-3">
+      <Music class="h-4 w-4 text-accent-ink" aria-hidden="true" />
+      <span class="whitespace-nowrap font-ui text-micro uppercase tracking-[0.25em] text-espresso-soft">
+        Crate Digging
+      </span>
+      <span class="h-px min-w-0 flex-1 bg-rule"></span>
+    </div>
+
+    <h2
+      class="mt-6 font-display text-[clamp(2.5rem,5vw,3.35rem)] font-semibold leading-none text-espresso"
+    >
+      Projects
+    </h2>
+
+    <ul class="mt-12 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        projects.map((p) => (
+          <li>
+            <ProjectCard
+              modalId={`project-${p.id}`}
+              title={p.data.title}
+              tagline={p.data.tagline}
+              slug={p.id}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  {/* Modals (native <dialog>; render in the top layer via showModal) */}
+  {
+    projects.map((p) => (
+      <ProjectModal
+        modalId={`project-${p.id}`}
+        title={p.data.title}
+        description={p.data.description}
+        techStack={p.data.techStack}
+        url={p.data.url}
+        slug={p.id}
+      />
+    ))
+  }
+</section>
+
+<script>
+  import '../scripts/project-modal.ts';
+</script>
+
+<style is:global>
+  /* Smooth open/close for the project <dialog> modals (CSS only). */
+  dialog[data-project-modal] {
+    padding: 0;
+    border: none;
+    background: transparent;
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease,
+      overlay 0.28s ease allow-discrete,
+      display 0.28s ease allow-discrete;
+  }
+  dialog[data-project-modal][open] {
+    opacity: 1;
+    transform: none;
+  }
+  @starting-style {
+    dialog[data-project-modal][open] {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+  }
+
+  dialog[data-project-modal]::backdrop {
+    background: rgba(10, 8, 6, 0.6);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition:
+      opacity 0.28s ease,
+      overlay 0.28s ease allow-discrete,
+      display 0.28s ease allow-discrete;
+  }
+  dialog[data-project-modal][open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    dialog[data-project-modal][open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    dialog[data-project-modal],
+    dialog[data-project-modal]::backdrop {
+      transition: none;
+    }
+  }
+</style>

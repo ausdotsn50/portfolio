@@ -22,7 +22,7 @@ export const experience: Experience[] = [
     company: 'Guiuan Development Foundation, Inc. (GDFI)',
     period: 'June 2026 – July 2026',
     description:
-      "Led frontend development of GDFI's official website; integrated a git-based CMS for non-technical staff to independently manage content, and optimized the site for search engine visibility. The website serves as a central hub presenting the foundation's mission and programs for coastal communities in Eastern Samar.",
+      "Led the development of GDFI's official website; integrated a git-based CMS for non-technical staff to independently manage content, and optimized the site for search engine visibility.",
     url: "https://gdfi1988.org/"
   },
 ];

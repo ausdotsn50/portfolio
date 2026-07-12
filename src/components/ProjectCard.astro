@@ -1,0 +1,81 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+// "The Album Sleeve" — a square vinyl-sleeve card. The whole card is the button
+// that opens the project's modal; the gold disc peeking from the right edge is
+// the affordance (it slides out a few px on hover), so there's no "View" button.
+interface Props {
+  modalId: string;
+  title: string;
+  tagline: string;
+  slug: string;
+}
+const { modalId, title, tagline, slug } = Astro.props;
+
+// Cover art lives at public/project-thumbnail/<slug>.webp by convention (the
+// project's .md filename), so no per-project frontmatter is needed. Falls
+// back to a placeholder sleeve when that file doesn't exist yet.
+const THUMBNAIL_DIR = 'project-thumbnail';
+const thumbnailSrc = `/${THUMBNAIL_DIR}/${slug}.webp`;
+const hasThumbnail = fs.existsSync(path.join(process.cwd(), 'public', THUMBNAIL_DIR, `${slug}.webp`));
+---
+
+<button
+  type="button"
+  data-project-open={modalId}
+  aria-haspopup="dialog"
+  aria-label={`View details for ${title}`}
+  class="group relative block w-full text-left"
+>
+  {/* Disc peeking out behind the sleeve's right edge */}
+  <span
+    class="pointer-events-none absolute right-0 top-1/2 z-0 aspect-square h-[86%] -translate-y-1/2 translate-x-[16%] transition-transform duration-300 ease-out group-hover:translate-x-[27%]"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 100 100" class="h-full w-full drop-shadow-lg">
+      <circle cx="50" cy="50" r="49" fill="#0c0906"></circle>
+      <circle cx="50" cy="50" r="49" fill="none" stroke="var(--mustard)" stroke-width="0.8" opacity="0.7"></circle>
+      {
+        [45, 39, 33, 27].map((r) => (
+          <circle cx="50" cy="50" r={r} fill="none" stroke="var(--mustard)" stroke-width="0.4" opacity="0.5" />
+        ))
+      }
+      <circle cx="50" cy="50" r="16" fill="var(--burnt-orange)"></circle>
+      <circle cx="50" cy="50" r="3" fill="#0c0906"></circle>
+    </svg>
+  </span>
+
+  {/* The sleeve (opaque, covers the disc's left side) */}
+  <span
+    class="relative z-10 flex aspect-square flex-col justify-end overflow-hidden rounded-lg border border-rule bg-[linear-gradient(150deg,#1d1610,#0d0a07)] shadow-xl transition-shadow duration-300 group-hover:shadow-2xl"
+  >
+    {/* Cover art or placeholder */}
+    {
+      hasThumbnail ? (
+        <img
+          src={thumbnailSrc}
+          alt={`${title} cover`}
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <span class="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_32%_28%,#2a2018,#0c0906)]" aria-hidden="true">
+          <svg viewBox="0 0 100 100" class="h-2/3 w-2/3 opacity-[0.07]">
+            {[46, 38, 30, 22, 14].map((r) => (
+              <circle cx="50" cy="50" r={r} fill="none" stroke="#f4ecd8" stroke-width="1" />
+            ))}
+          </svg>
+        </span>
+      )
+    }
+
+    {/* Title + tagline over a scrim */}
+    <span class="relative z-10 bg-gradient-to-t from-[rgba(8,6,4,0.9)] via-[rgba(8,6,4,0.45)] to-transparent px-4 pb-4 pt-16">
+      <span class="block font-display text-h4 font-bold leading-tight text-[#f4ecd8]">{title}</span>
+      <span class="mt-0.5 block font-body text-small leading-snug text-[rgba(244,236,216,0.72)]">
+        {tagline}
+      </span>
+      <span class="sr-only">. Opens details.</span>
+    </span>
+  </span>
+</button>

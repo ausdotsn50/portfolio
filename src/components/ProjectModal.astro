@@ -1,0 +1,153 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import X from 'lucide-astro/X';
+import ArrowUpRight from 'lucide-astro/ArrowUpRight';
+import MiniDisc from './MiniDisc.astro';
+
+// "The Disc" — a native <dialog> styled like a disc's printed face.
+// <dialog>.showModal() provides the focus trap, Escape-to-close, and aria-modal
+// natively; project-modal.ts only wires open + close-button + backdrop-click.
+interface Props {
+  modalId: string;
+  title: string;
+  description: string;
+  techStack: string[];
+  url?: string;
+  slug: string;
+}
+const { modalId, title, description, techStack, url, slug } = Astro.props;
+const strippedUrl = url?.replace(/^https?:\/\//, '');
+
+// Icon slug is assumed to be the lowercased, space-stripped tech name (e.g.
+// "Tailwind CSS" -> "tailwindcss"); falls back to no icon on the mini disc
+// when src/icons/ has no matching file.
+const ICONS_DIR = path.join(process.cwd(), 'src/icons');
+const toIconSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '');
+const iconFor = (name: string) => {
+  const slug = toIconSlug(name);
+  return fs.existsSync(path.join(ICONS_DIR, `${slug}.svg`)) ? slug : undefined;
+};
+
+// Same public/project-thumbnail/<slug>.webp convention as ProjectCard —
+// falls back to the plain gradient-label disc when no file exists yet.
+const THUMBNAIL_DIR = 'project-thumbnail';
+const thumbnailSrc = `/${THUMBNAIL_DIR}/${slug}.webp`;
+const hasThumbnail = fs.existsSync(path.join(process.cwd(), 'public', THUMBNAIL_DIR, `${slug}.webp`));
+
+// Ids must be unique per modal instance (one <dialog> per project on the
+// page) or every fill="url(#...)"/clip-path across discs collides onto one.
+const discUid = randomUUID();
+const labelGradientId = `modal-label-${discUid}`;
+const discClipId = `modal-disc-clip-${discUid}`;
+---
+
+<dialog id={modalId} data-project-modal aria-labelledby={`${modalId}-title`}>
+  <div class="modal-panel relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-rule bg-cream p-6 shadow-2xl sm:p-8">
+    <button
+      type="button"
+      data-project-close
+      aria-label="Close"
+      class="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-espresso-soft transition-colors hover:bg-cream-deep hover:text-accent-ink"
+    >
+      <X class="h-5 w-5" aria-hidden="true" />
+    </button>
+
+    {/* Header: the disc + album title */}
+    <div class="flex flex-col items-center gap-5 pr-8 sm:flex-row sm:gap-6">
+      <div class="modal-disc group h-24 w-24 shrink-0 cursor-pointer drop-shadow-md">
+        <div class="disc-face h-full w-full">
+          <svg viewBox="0 0 100 100" class="h-full w-full" aria-hidden="true">
+            {hasThumbnail ? (
+              <>
+                <defs>
+                  <clipPath id={discClipId}>
+                    <circle cx="50" cy="50" r="48" />
+                  </clipPath>
+                </defs>
+                {/* Picture disc: cover art as the vinyl's printed background */}
+                <image
+                  href={thumbnailSrc}
+                  x="2"
+                  y="2"
+                  width="96"
+                  height="96"
+                  preserveAspectRatio="xMidYMid slice"
+                  clip-path={`url(#${discClipId})`}
+                />
+                {[44, 38, 32, 26].map((r) => (
+                  <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(244,236,216,0.22)" stroke-width="0.5" />
+                ))}
+                <circle cx="50" cy="50" r="48" fill="none" stroke="var(--mustard)" stroke-width="0.8" opacity="0.8" />
+                <circle cx="50" cy="50" r="9" fill="rgba(12,9,6,0.55)" />
+                <circle cx="50" cy="50" r="3.5" fill="#0c0906"></circle>
+              </>
+            ) : (
+              <>
+                <circle cx="50" cy="50" r="48" fill="#0c0906"></circle>
+                <circle cx="50" cy="50" r="48" fill="none" stroke="var(--mustard)" stroke-width="0.8" opacity="0.7"></circle>
+                {[44, 38, 32, 26].map((r) => (
+                  <circle cx="50" cy="50" r={r} fill="none" stroke="var(--mustard)" stroke-width="0.4" opacity="0.5" />
+                ))}
+                <circle cx="50" cy="50" r="19" fill={`url(#${labelGradientId})`}></circle>
+                <circle cx="50" cy="50" r="3.5" fill="#0c0906"></circle>
+                <defs>
+                  <radialGradient id={labelGradientId} cx="42%" cy="38%">
+                    <stop offset="0%" stop-color="var(--mustard)"></stop>
+                    <stop offset="100%" stop-color="var(--burnt-orange)"></stop>
+                  </radialGradient>
+                </defs>
+              </>
+            )}
+          </svg>
+        </div>
+      </div>
+
+      <div class="text-center sm:text-left">
+        <h2 id={`${modalId}-title`} class="mt-1 font-display text-h2 font-bold leading-tight text-espresso">
+          {title}
+        </h2>
+        {url && (
+          <a
+            class="mt-1 font-body text-body italic text-espresso-soft underline-offset-2 hover:text-accent-ink hover:underline"
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {strippedUrl}
+          </a>
+        )}
+      </div>
+    </div>
+
+    <p class="mt-8 font-body text-body leading-relaxed text-espresso-soft">{description}</p>
+    <div class="mt-6 flex flex-wrap gap-x-6 gap-y-6">
+      {techStack.map((tech) => <MiniDisc name={tech} icon={iconFor(tech)} />)}
+    </div>
+
+  </div>
+</dialog>
+
+<style>
+  .disc-face {
+    transform-origin: center;
+    transition: transform 300ms ease;
+  }
+  .modal-disc:hover .disc-face {
+    animation: modal-disc-spin 5s linear infinite;
+  }
+
+  @keyframes modal-disc-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .modal-disc:hover .disc-face {
+      animation: none;
+      transform: scale(1.06);
+    }
+  }
+</style>
