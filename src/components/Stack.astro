@@ -1,7 +1,19 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import Music from 'lucide-astro/Music';
 import MiniDisc from './MiniDisc.astro';
 import { stack } from '../data/stack';
+
+// Icon slug is the lowercased, space-stripped tech name (e.g. "VS Code" ->
+// "vscode"), falling back to no icon when src/icons/ has no matching file —
+// same convention as the project cards' tech stack.
+const ICONS_DIR = path.join(process.cwd(), 'src/icons');
+const toIconSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '');
+const iconFor = (name: string) => {
+  const slug = toIconSlug(name);
+  return fs.existsSync(path.join(ICONS_DIR, `${slug}.svg`)) ? slug : undefined;
+};
 ---
 
 <section id="stack">
@@ -20,10 +32,6 @@ import { stack } from '../data/stack';
     >
       Stack
     </h2>
-    <p class="mt-4 font-body text-body-large leading-[1.7] text-espresso-soft">
-      The kit I reach for — a crate of records, one per tool. Hover to give any a spin.
-    </p>
-
     <!-- Crate: categories of mini discs -->
     <div class="mt-12 space-y-10">
       {
@@ -37,7 +45,7 @@ import { stack } from '../data/stack';
             </div>
             <div class="mt-6 flex flex-wrap gap-x-8 gap-y-8">
               {category.items.map((tech) => (
-                <MiniDisc name={tech.name} icon={tech.icon} />
+                <MiniDisc name={tech} icon={iconFor(tech)} />
               ))}
             </div>
           </div>
