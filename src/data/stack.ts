@@ -17,7 +17,7 @@ export const stack: StackCategory[] = [
   },
   {
     name: 'Libraries/Frameworks',
-    items: ['React', 'Expo', 'Express', 'Flask', 'Tailwind', 'Vite', 'WordPress'],
+    items: ['React', 'Expo', 'ExpressJS', 'Flask', 'Tailwind', 'Vite', 'WordPress'],
   },
   {
     name: 'Databases',

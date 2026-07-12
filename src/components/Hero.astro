@@ -1,9 +1,52 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import NowPlaying from './NowPlaying.astro';
+import MiniDisc from './MiniDisc.astro';
+import { stack } from '../data/stack';
+
+// Icon slug is the lowercased, space-stripped tech name — same convention as
+// Stack.astro / ProjectModal.astro — falling back to no icon when src/icons/
+// has no matching file.
+const ICONS_DIR = path.join(process.cwd(), 'src/icons');
+const toIconSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '');
+const iconFor = (name: string) => {
+  const slug = toIconSlug(name);
+  return fs.existsSync(path.join(ICONS_DIR, `${slug}.svg`)) ? slug : undefined;
+};
+
+// Ambient "falling discs" behind the hero copy — the same MiniDisc used in
+// Stack/ProjectModal, one per tech, just faint and adrift. Decorative only
+// (aria-hidden, low opacity), pure CSS animation, no JS. Values randomized
+// once at build time; negative delays stagger them so they don't all start
+// bunched at the top.
+const allTechs = stack.flatMap((category) => category.items);
+const fallingDiscs = allTechs.map((tech) => ({
+  name: tech,
+  icon: iconFor(tech),
+  left: Math.round(Math.random() * 100),
+  scale: (0.4 + Math.random() * 0.5).toFixed(2),
+  duration: Math.round(16 + Math.random() * 14),
+  delay: -Math.round(Math.random() * 30),
+  opacity: (0.3 + Math.random() * 0.1).toFixed(2),
+}));
 ---
 <section id="hero" class="relative overflow-hidden">
+  <div class="hero-discs-layer pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+    {
+      fallingDiscs.map((d) => (
+        <span
+          class="hero-disc absolute"
+          style={`left:${d.left}%; opacity:${d.opacity}; --disc-scale:${d.scale}; animation-duration:${d.duration}s; animation-delay:${d.delay}s;`}
+        >
+          <MiniDisc name={d.name} icon={d.icon} />
+        </span>
+      ))
+    }
+  </div>
+
   <div class="relative z-10 mx-auto max-w-content px-6 py-12 md:py-20">
-    <div class="grid grid-cols-1 items-center gap-y-12 gap-x-8 md:grid-cols-12 lg:gap-16">
+    <div class="grid grid-cols-1 items-center gap-y-2 gap-x-8 md:grid-cols-12 lg:gap-16">
       <!-- Left: intro -->
       <div class="md:col-span-6 lg:col-span-7">
 
@@ -43,3 +86,46 @@ import NowPlaying from './NowPlaying.astro';
     </div>
   </div>
 </section>
+
+<style>
+  /* Soft top/bottom fade so discs dissolve in and out instead of hard-cutting
+     at the section edge. */
+  .hero-discs-layer {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 12%,
+      black 88%,
+      transparent 100%
+    );
+  }
+
+  .hero-disc {
+    /* top (not transform) so the fall is a % of the section's real height,
+       not a guessed vh distance — it always spans edge to edge, and the
+       mask above handles the smooth disappear at both ends. */
+    animation-name: hero-disc-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes hero-disc-fall {
+    from {
+      top: -10%;
+      transform: scale(var(--disc-scale)) rotate(0deg);
+    }
+    to {
+      top: 100%;
+      transform: scale(var(--disc-scale)) rotate(25deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-disc {
+      animation: none;
+      top: 40%;
+      transform: scale(var(--disc-scale));
+    }
+  }
+</style>
