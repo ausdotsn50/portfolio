@@ -1,0 +1,24 @@
+---
+// Renders a local brand/tech logo from src/icons/<name>.svg by name.
+// Only the files in that folder are bundled (via import.meta.glob) — no icon
+// library. SVGs use currentColor, so `text-*` classes tint them.
+const raws = import.meta.glob('../icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+interface Props {
+  name: string;
+  class?: string;
+}
+const { name, class: className } = Astro.props;
+
+const raw = raws[`../icons/${name}.svg`];
+if (!raw) throw new Error(`BrandIcon: missing src/icons/${name}.svg`);
+
+const viewBox = raw.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
+const body = raw.replace(/^[\s\S]*?<svg[^>]*>/i, '').replace(/<\/svg>[\s\S]*$/i, '');
+---
+
+<svg viewBox={viewBox} class={className} fill="currentColor" aria-hidden="true" set:html={body} />

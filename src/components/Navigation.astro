@@ -1,12 +1,16 @@
 ---
-import { Icon } from "astro-icon/components";
+import Music from 'lucide-astro/Music';
+import Sun from 'lucide-astro/Sun';
+import Moon from 'lucide-astro/Moon';
 
 // Single-page navigation for the vinyl/jazz portfolio.
 // Links scroll to in-page sections; the theme toggle flips the
 
 const links = [
   { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Stack', href: '#stack' },
   { label: 'Contact', href: '#contact' },
 ];
 ---
@@ -16,17 +20,13 @@ const links = [
   class="sticky top-0 z-50 border-b border-transparent bg-cream/95 backdrop-blur-sm transition-[box-shadow,border-color] duration-200 data-[scrolled]:border-rule data-[scrolled]:shadow-sm"
 >
   <div
-    class="mx-auto grid max-w-content grid-cols-[1fr_auto] items-center gap-4 px-6 py-5 md:grid-cols-[1fr_auto_1fr]"
+    class="mx-auto flex max-w-content items-center justify-between gap-4 px-6 py-5"
   >
     <a
       href="#home"
       class="group flex items-center gap-2 justify-self-start font-display text-h3 font-semibold italic text-espresso transition-opacity hover:opacity-70"
     >
-      <Icon
-        class="text-burnt-orange not-italic"
-        name="mdi-light:music"
-        aria-hidden="true"
-      />
+      <Music class="h-5 w-5 text-burnt-orange" aria-hidden="true" />
       ausdotsn50
     </a>
 
@@ -45,31 +45,6 @@ const links = [
         ))
       }
     </ul>
-
-    <div class="flex items-center justify-self-end">
-      <button
-        id="theme-toggle"
-        type="button"
-        class="rounded-sm p-1 text-espresso transition-opacity hover:opacity-70"
-        aria-label="Toggle color theme"
-        title="Flip the record"
-      > 
-        {/* Sun — shown in dark mode (click to go light) */}
-        <Icon 
-          class="block h-[18px] w-[18px] 
-          dark:hidden" 
-          name="solar:sun-outline"
-          aria-hidden="true" 
-        />  
-        
-        {/* Moon — shown in light mode (click to go dark) */}
-        <Icon 
-          class="hidden h-[18px] w-[18px] 
-          dark:block" 
-          name="solar:moon-bold" 
-        />
-      </button>
-    </div>
   </div>
 </nav>
 

@@ -1,5 +1,8 @@
 ---
-import { Icon } from 'astro-icon/components';
+import Play from 'lucide-astro/Play';
+import Pause from 'lucide-astro/Pause';
+import SkipBack from 'lucide-astro/SkipBack';
+import SkipForward from 'lucide-astro/SkipForward';
 import VinylRecord from './VinylRecord.astro';
 
 // A "now playing" player styled as a vinyl disc-case. The playlist holds real
@@ -86,12 +89,7 @@ const first = playlist[0];
       aria-label="Previous focus"
       class="grid h-10 w-10 place-items-center rounded-full text-espresso transition-colors hover:bg-cream-deep hover:text-accent-ink"
     >
-      <Icon
-        name="mage:previous-fill"
-        width="20" 
-        height="20" 
-        aria-hidden="true"
-      />
+      <SkipBack class="h-5 w-5" aria-hidden="true" />
     </button>
 
     <button
@@ -101,21 +99,9 @@ const first = playlist[0];
       aria-label="Play"
       class="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-burnt-orange to-mustard text-[#1c1410] shadow-md transition-opacity hover:opacity-90"
     >
-      <Icon 
-        name="mdi:play"
-        class="np-icon-play" 
-        width="20" 
-        height="20" 
-        aria-hidden="true"
-      />
+      <Play class="np-icon-play h-5 w-5" aria-hidden="true" />
 
-      <Icon
-        name="material-symbols:pause"
-        class="np-icon-pause hidden" 
-        width="20" 
-        height="20" 
-        aria-hidden="true"
-      />
+      <Pause class="np-icon-pause hidden h-5 w-5" aria-hidden="true" />
     </button>
 
     <button
@@ -124,12 +110,7 @@ const first = playlist[0];
       aria-label="Next focus"
       class="grid h-10 w-10 place-items-center rounded-full text-espresso transition-colors hover:bg-cream-deep hover:text-accent-ink"
     >
-      <Icon
-        name="mage:next-fill"
-        width="20" 
-        height="20" 
-        aria-hidden="true"
-      />
+      <SkipForward class="h-5 w-5" aria-hidden="true" />
     </button>
   </div>
 
