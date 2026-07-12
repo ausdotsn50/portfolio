@@ -1,0 +1,80 @@
+---
+import Music from 'lucide-astro/Music';
+import ArrowUpRight from 'lucide-astro/ArrowUpRight';
+import { contact, socialLinks } from '../data/contact';
+
+// Outro — closing "Let's make something together" CTA, pulled from Figma.
+// Same section-label + heading conventions as every other section. No
+// section-level background — every section relies on the shared html/body
+// background + ambient glow (global.css) so there are no seams between them.
+---
+
+<section id="contact" class="relative overflow-hidden">
+  {/* Decorative groove-ring, top-right, mostly off-canvas */}
+  <div class="pointer-events-none absolute -top-10 right-0 h-[180px] w-[180px] opacity-5" aria-hidden="true">
+    <svg viewBox="0 0 24 24" class="h-full w-full text-espresso">
+      {[11, 8.7, 6.4, 4.1, 1.8].map((r) => (
+        <circle cx="12" cy="12" r={r} fill="none" stroke="currentColor" stroke-width="0.3" />
+      ))}
+    </svg>
+  </div>
+
+  <div class="relative mx-auto max-w-content px-6 py-16 md:py-24">
+    <!-- Section label -->
+    <div class="flex items-center gap-3">
+      <Music class="h-4 w-4 text-accent-ink" aria-hidden="true" />
+      <span class="whitespace-nowrap font-ui text-micro uppercase tracking-[0.25em] text-espresso-soft">
+        Outro
+      </span>
+      <span class="h-px min-w-0 flex-1 bg-rule"></span>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 items-start gap-y-10 gap-x-8 md:grid-cols-12 lg:gap-16">
+      <!-- Heading -->
+      <h2 class="font-display text-expresso text-[clamp(2.5rem,7vw,5.5rem)] font-semibold leading-[1.05] text-espresso md:col-span-6 lg:col-span-7">
+        <span class="block">Let's ship</span>
+        <span class="block italic text-burnt-orange">software</span>
+        <span class="block">that matters.</span>
+      </h2>
+
+      <!-- Copy + links -->
+      <div class="md:col-span-6 md:pt-2 lg:col-span-5">
+        <p class="font-body text-body-large leading-[1.8] text-espresso-soft md:max-w-md">
+          Open to full-time roles, contract work, and the occasional side project.
+          If you're building something for local businesses, governments, or communities
+          that need it — I'd love to be part of it.
+        </p>
+
+        <p class="mt-6 font-ui font-semibold text-micro uppercase tracking-[0.2em] text-sepia">Let's connect</p>
+
+        <a
+          href={`mailto:${contact.email}`}
+          class="mt-2 flex items-center justify-between gap-3 border-b border-rule py-3 transition-colors hover:border-accent-ink md:max-w-md"
+        >
+          <span class="font-display text-h4 font-semibold text-espresso">{contact.email}</span>
+          <ArrowUpRight class="h-[18px] w-[18px] shrink-0 text-espresso-soft" aria-hidden="true" />
+        </a>
+
+        {
+          socialLinks.length > 0 && (
+            <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+              {socialLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 font-ui text-small text-sepia transition-colors hover:text-accent-ink"
+                  >
+                    {link.label}
+                    <ArrowUpRight class="h-[9px] w-[9px]" aria-hidden="true" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

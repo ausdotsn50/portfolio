@@ -1,0 +1,26 @@
+---
+import Music from 'lucide-astro/Music';
+import { contact } from '../data/contact';
+
+// Footer — pulled from Figma, except the right-hand side: the design shows a
+// live clock ("18:38:22 EST"), which would either be frozen at build time in
+// the wrong timezone or need a client-side ticking script. Swapped for a
+// build-time dynamic copyright year instead, per the standing convention.
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-rule px-6 py-6 md:px-12">
+  <div class="mx-auto flex max-w-content flex-wrap items-center justify-between gap-x-6 gap-y-2">
+    <div class="font-ui text-micro text-sepia flex items-center gap-3">
+      <span>{contact.name}</span>
+      <span>&middot;</span>
+      <span>{contact.location}</span>
+    </div>
+
+    <div class="font-ui text-micro text-sepia  flex items-center gap-3">
+      <span>&copy; {year} ausdotsn50</span>
+      <span>&middot;</span>
+      <span class="font-display text-small italic">All originals</span>
+    </div>
+  </div>
+</footer>
