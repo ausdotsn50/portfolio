@@ -15,28 +15,7 @@
   --font-ui: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Day Session (light) */
-  --cream: #f4ecd8;
-  --cream-deep: #e8dcc0;
-  --espresso: #2a1f17;
-  --espresso-soft: #4a3828;
-  --sepia: #7a6855;
-  --burnt-orange: #c25a1f;
-  --mustard: #c89b3c;
-  --dusty-teal: #4a6b6b;
-  --rule: #d4c4a8;
-  /* Darkened burnt-orange for small text / links on cream (WCAG AA) */
-  --accent-ink: #a24512;
-  /* Ambient section glows — burnt-orange (top-right) + gold (bottom-left).
-     A warm tint over the already-light, already-warm cream base barely shifts
-     luminance, so these need much more opacity than the dark palette to read
-     with comparable presence. */
-  --glow-warm: rgba(194, 90, 31, 0.3);
-  --glow-gold: rgba(200, 155, 60, 0.24);
-}
 
-.dark {
-  /* Night Session (dark) */
   --cream: #1c1814;
   --cream-deep: #2a241c;
   --espresso: #f0e6d2;
@@ -46,9 +25,9 @@
   --mustard: #d9b057;
   --dusty-teal: #6b8a8a;
   --rule: #3a3128;
-  /* On the dark bg the standard burnt-orange already clears AA */
+  
   --accent-ink: #e08a5a;
-  /* Glows read stronger over the darker Night base */
+  
   --glow-warm: rgba(217, 120, 67, 0.14);
   --glow-gold: rgba(217, 176, 87, 0.1);
 }
