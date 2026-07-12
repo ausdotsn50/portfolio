@@ -53,11 +53,19 @@ const hasThumbnail = fs.existsSync(path.join(process.cwd(), 'public', THUMBNAIL_
     {/* Cover art or placeholder */}
     {
       hasThumbnail ? (
-        <img
-          src={thumbnailSrc}
-          alt={`${title} cover`}
-          class="absolute inset-0 h-full w-full object-cover"
-        />
+        <>
+          <img
+            src={thumbnailSrc}
+            alt={`${title} cover`}
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Same warm duotone treatment as the About carousel — eases off on
+              hover to reveal true color. */}
+          <span
+            class="pointer-events-none absolute inset-0 bg-gradient-to-br from-[rgba(194,90,31,0.28)] to-[rgba(20,12,6,0.42)] mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0"
+            aria-hidden="true"
+          />
+        </>
       ) : (
         <span class="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_32%_28%,#2a2018,#0c0906)]" aria-hidden="true">
           <svg viewBox="0 0 100 100" class="h-2/3 w-2/3 opacity-[0.07]">
