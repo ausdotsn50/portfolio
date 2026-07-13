@@ -121,8 +121,8 @@ const discClipId = `modal-disc-clip-${discUid}`;
       </div>
     </div>
 
-    <p class="mt-8 font-body text-body leading-relaxed text-espresso-soft">{description}</p>
-    <div class="mt-6 flex flex-wrap gap-x-6 gap-y-6">
+    <p class="mt-8 font-body text-body text-center sm:text-start leading-relaxed text-espresso-soft">{description}</p>
+    <div class="mt-6 flex flex-wrap justify-center sm:justify-start gap-x-4 gap-y-6">
       {techStack.map((tech) => <MiniDisc name={tech} icon={iconFor(tech)} />)}
     </div>
 
