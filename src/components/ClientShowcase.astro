@@ -1,0 +1,179 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import ChevronLeft from 'lucide-astro/ChevronLeft';
+import ChevronRight from 'lucide-astro/ChevronRight';
+import { showcaseSites } from '../data/showcase';
+
+// Same thumbnail convention as ProjectCard: public/client-showcase/<slug>.webp,
+// falling back to a placeholder frame when the file isn't there yet.
+const THUMBNAIL_DIR = 'client-showcase';
+const hasThumbnail = (slug: string) =>
+  fs.existsSync(path.join(process.cwd(), 'public', THUMBNAIL_DIR, `${slug}.webp`));
+
+// A short "address bar" label derived from the live URL (or the site name
+// when there isn't one yet) — purely decorative browser-chrome dressing.
+const addressFor = (site: (typeof showcaseSites)[number]) =>
+  site.url ? site.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : `${site.name.toLowerCase().replace(/\s+/g, '')}.com`;
+---
+
+<section id="showcase" class="overflow-hidden">
+  <div class="mx-auto max-w-content px-6 py-16 md:py-24">
+    <!-- No eyebrow here on purpose — this section reads as a continuation of
+         the Hero rather than a new "session", so it skips the icon+label
+         liner every other section uses and just centers the copy. -->
+    <h2 class="mx-auto max-w-2xl text-center font-display text-[clamp(2.5rem,5vw,3.35rem)] font-semibold leading-none text-espresso">
+      Recent Work
+    </h2>
+
+    <p class="mx-auto mt-6 max-w-2xl text-center font-body text-body-large leading-[1.7] text-espresso-soft">
+      A selection of recent website builds — spanning business, nonprofit, and civic projects,
+      each built fast, accessible, and easy to maintain.
+    </p>
+
+    <!-- Fanned carousel: one preview peeking on each side, always symmetric
+         (only the immediate neighbor shows — never two on one side and one
+         on the other). Positioned via data-offset, set in client-carousel.ts. -->
+    <div class="mt-14" data-client-carousel>
+      <div class="relative mx-auto h-[300px] w-full sm:h-[340px] md:h-[380px]">
+        {
+          showcaseSites.map((site, i) => {
+            const thumb = hasThumbnail(site.slug);
+            const CardTag = site.url ? 'a' : 'div';
+            return (
+              <CardTag
+                data-card
+                data-offset={i === 0 ? '0' : 'hidden'}
+                href={site.url}
+                target={site.url ? '_blank' : undefined}
+                rel={site.url ? 'noreferrer' : undefined}
+                aria-label={`${site.name} — ${site.category}`}
+                class="showcase-card absolute left-1/2 top-1/2 block w-[78%] max-w-md overflow-hidden rounded-xl border border-rule bg-cream-deep shadow-xl sm:w-[58%] md:w-[42%]"
+              >
+                {/* Browser chrome */}
+                <div class="flex items-center gap-1.5 border-b border-rule bg-[linear-gradient(180deg,#1d1610,#15100b)] px-3 py-2">
+                  <span class="h-2 w-2 rounded-full bg-[#d97843]/70" />
+                  <span class="h-2 w-2 rounded-full bg-[#d9b057]/70" />
+                  <span class="h-2 w-2 rounded-full bg-[#6b8a8a]/70" />
+                  <span class="ml-2 flex-1 truncate rounded-full bg-[rgba(244,236,216,0.08)] px-2.5 py-0.5 font-ui text-[11px] text-[rgba(201,184,154,0.8)]">
+                    {addressFor(site)}
+                  </span>
+                </div>
+
+                {/* Screenshot or placeholder */}
+                <div class="relative aspect-[16/10]">
+                  {thumb ? (
+                    <img
+                      src={`/${THUMBNAIL_DIR}/${site.slug}.webp`}
+                      alt={`${site.name} homepage screenshot`}
+                      class="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  ) : (
+                    <span class="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_32%_28%,#2a2018,#0c0906)]" aria-hidden="true">
+                      <svg viewBox="0 0 100 100" class="h-1/2 w-1/2 opacity-[0.08]">
+                        {[46, 38, 30, 22, 14].map((r) => (
+                          <circle cx="50" cy="50" r={r} fill="none" stroke="#f4ecd8" stroke-width="1" />
+                        ))}
+                      </svg>
+                    </span>
+                  )}
+                  <div class="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(8,6,4,0.92)] via-[rgba(8,6,4,0.5)] to-transparent px-4 pb-3 pt-10">
+                    <span class="block font-display text-h4 font-bold leading-tight text-[#f4ecd8]">
+                      {site.name}
+                    </span>
+                    <span class="mt-0.5 block font-body text-small leading-snug text-[rgba(244,236,216,0.72)]">
+                      {site.category}
+                    </span>
+                  </div>
+                </div>
+              </CardTag>
+            );
+          })
+        }
+      </div>
+
+      {/* Controls */}
+      <div class="mt-8 flex items-center justify-center gap-6">
+        <button
+          data-prev
+          type="button"
+          aria-label="Previous site"
+          class="grid h-9 w-9 place-items-center rounded-full border border-rule text-espresso-soft transition hover:bg-cream-deep"
+        >
+          <ChevronLeft class="h-[18px] w-[18px]" aria-hidden="true" />
+        </button>
+
+        <div class="flex items-center gap-2">
+          {showcaseSites.map((_, i) => (
+            <button
+              data-dot
+              type="button"
+              aria-label={`Go to site ${i + 1}`}
+              aria-current={i === 0 ? 'true' : 'false'}
+              data-active={i === 0 ? '' : undefined}
+              class="h-2 w-2 rounded-full bg-sepia transition-all duration-300 data-[active]:h-2.5 data-[active]:w-2.5 data-[active]:bg-burnt-orange"
+            />
+          ))}
+        </div>
+
+        <button
+          data-next
+          type="button"
+          aria-label="Next site"
+          class="grid h-9 w-9 place-items-center rounded-full border border-rule text-espresso-soft transition hover:bg-cream-deep"
+        >
+          <ChevronRight class="h-[18px] w-[18px]" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/client-carousel.ts';
+</script>
+
+<style>
+  .showcase-card {
+    transition:
+      transform 0.5s ease,
+      opacity 0.5s ease;
+    will-change: transform, opacity;
+  }
+
+  .showcase-card[data-offset='0'] {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    z-index: 20;
+  }
+  .showcase-card[data-offset='-1'] {
+    transform: translate(-125%, -50%) scale(0.82);
+    opacity: 0.5;
+    z-index: 10;
+  }
+  .showcase-card[data-offset='1'] {
+    transform: translate(25%, -50%) scale(0.82);
+    opacity: 0.5;
+    z-index: 10;
+  }
+  .showcase-card[data-offset='hidden'] {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 639px) {
+    /* Single-card view on small screens — no side peeking. */
+    .showcase-card[data-offset='-1'],
+    .showcase-card[data-offset='1'] {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .showcase-card {
+      transition: none;
+    }
+  }
+</style>
