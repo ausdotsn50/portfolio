@@ -1,5 +1,8 @@
 ---
 import Music from 'lucide-astro/Music';
+import CircleCheck from 'lucide-astro/CircleCheck';
+import CircleAlert from 'lucide-astro/CircleAlert';
+import LoaderCircle from 'lucide-astro/LoaderCircle';
 
 // Outro — closing "Let's make something together" CTA, pulled from Figma.
 // Same section-label + heading conventions as every other section. No
@@ -58,6 +61,11 @@ import Music from 'lucide-astro/Music';
           </div>
           <input type="hidden" name="startedAt" data-started-at />
 
+          {/* Each field has an error slot beneath it, linked via
+              aria-describedby so screen readers read the message when the
+              field is focused. Slots are <span class="block">, not <p> —
+              a <p> isn't valid inside a <label>. `empty:hidden` keeps an
+              empty slot from adding stray spacing. */}
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label class="block">
               <span class="font-ui text-micro uppercase tracking-[0.15em] text-sepia">Name</span>
@@ -66,8 +74,14 @@ import Music from 'lucide-astro/Music';
                 name="name"
                 required
                 autocomplete="name"
-                class="mt-1.5 w-full rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink"
+                aria-describedby="contact-name-error"
+                class="mt-1.5 w-full rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink aria-[invalid=true]:border-burnt-orange"
               />
+              <span
+                id="contact-name-error"
+                data-field-error="name"
+                class="mt-1.5 block font-body text-small text-accent-ink empty:hidden"
+              ></span>
             </label>
 
             <label class="block">
@@ -77,8 +91,14 @@ import Music from 'lucide-astro/Music';
                 name="email"
                 required
                 autocomplete="email"
-                class="mt-1.5 w-full rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink"
+                aria-describedby="contact-email-error"
+                class="mt-1.5 w-full rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink aria-[invalid=true]:border-burnt-orange"
               />
+              <span
+                id="contact-email-error"
+                data-field-error="email"
+                class="mt-1.5 block font-body text-small text-accent-ink empty:hidden"
+              ></span>
             </label>
           </div>
 
@@ -88,18 +108,49 @@ import Music from 'lucide-astro/Music';
               name="message"
               rows="4"
               required
-              class="mt-1.5 w-full resize-y rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink"
+              aria-describedby="contact-message-error"
+              class="mt-1.5 w-full resize-y rounded-lg border border-rule bg-cream-deep px-3 py-2.5 font-body text-body text-espresso placeholder:text-sepia focus:border-accent-ink focus:outline-none focus:ring-1 focus:ring-accent-ink aria-[invalid=true]:border-burnt-orange"
             ></textarea>
+            <span
+              id="contact-message-error"
+              data-field-error="message"
+              class="mt-1.5 block font-body text-small text-accent-ink empty:hidden"
+            ></span>
           </label>
 
+          {/* Full-width: every field above spans the column, so a full-width
+              button closes the form off rather than leaving a stub on the
+              left. The spinner shows while the button is disabled (sending). */}
           <button
             type="submit"
-            class="mt-5 inline-flex items-center rounded-lg bg-gradient-to-br from-burnt-orange to-mustard px-6 py-3 font-ui text-small font-medium text-[#1c1410] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            class="group/submit mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-burnt-orange to-mustard px-6 py-3.5 font-ui text-small font-medium text-[#1c1410] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Send message
+            <LoaderCircle
+              class="hidden h-4 w-4 animate-spin group-disabled/submit:block motion-reduce:animate-none"
+              aria-hidden="true"
+            />
+            <span data-submit-label>Send message</span>
           </button>
 
-          <p data-form-status role="status" aria-live="polite" class="mt-3 font-body text-small"></p>
+          {/* Status banner, below the button so a message appearing never
+              shifts the button under the pointer mid-retry. Always in the DOM
+              (never display:none) so screen readers reliably announce it; it
+              has no footprint until data-state is set. The icon marks success
+              vs error so the difference isn't carried by colour alone. */}
+          <div
+            data-form-status
+            role="status"
+            aria-live="polite"
+            class="form-status font-body text-small leading-relaxed"
+          >
+            <span class="form-status-icon" data-icon="success" aria-hidden="true">
+              <CircleCheck class="h-[18px] w-[18px]" />
+            </span>
+            <span class="form-status-icon" data-icon="error" aria-hidden="true">
+              <CircleAlert class="h-[18px] w-[18px]" />
+            </span>
+            <span data-form-status-text></span>
+          </div>
         </form>
       </div>
     </div>
@@ -109,3 +160,48 @@ import Music from 'lucide-astro/Music';
 <script>
   import '../scripts/contact-form.ts';
 </script>
+
+<style>
+  /* Tints use color-mix() on the palette variables rather than Tailwind's
+     `token/opacity` syntax, which silently generates no CSS for this
+     project's var()-based colours. */
+  .form-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+  }
+
+  .form-status[data-state] {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    color: var(--espresso);
+  }
+
+  .form-status[data-state='success'] {
+    border-color: color-mix(in srgb, var(--mustard) 45%, transparent);
+    background: color-mix(in srgb, var(--mustard) 10%, transparent);
+  }
+
+  .form-status[data-state='error'] {
+    border-color: color-mix(in srgb, var(--burnt-orange) 55%, transparent);
+    background: color-mix(in srgb, var(--burnt-orange) 10%, transparent);
+  }
+
+  .form-status-icon {
+    display: none;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .form-status[data-state='success'] [data-icon='success'] {
+    display: block;
+    color: var(--mustard);
+  }
+
+  .form-status[data-state='error'] [data-icon='error'] {
+    display: block;
+    color: var(--burnt-orange);
+  }
+</style>

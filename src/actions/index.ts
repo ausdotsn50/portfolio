@@ -21,18 +21,35 @@ const MIN_FILL_MS = 3000;
 export const server = {
   sendMessage: defineAction({
     accept: 'form',
+    // Every check carries its own plain-language message — a check without
+    // one falls back to zod's default wording ("Invalid input: expected
+    // string, received null"), which is meaningless to a visitor.
+    //
+    // The `error` on z.string() itself matters most: Astro turns an empty
+    // form field into null, so a blank submit fails the type check before
+    // .min() ever runs. Without it, the .min() messages would never show.
     input: z.object({
-      name: z.string().trim().min(1, 'Please enter your name.').max(100),
-      email: z.string().trim().email('Please enter a valid email address.'),
-      message: z
-        .string()
+      name: z
+        .string({ error: 'Please enter your name.' })
         .trim()
-        .min(10, 'Please write at least a few words.')
-        .max(5000, 'That message is a bit too long.'),
+        .min(1, 'Please enter your name.')
+        .max(100, 'Please keep your name under 100 characters.'),
+      email: z
+        .string({ error: 'Please enter your email address.' })
+        .trim()
+        .min(1, 'Please enter your email address.')
+        .email("That email address doesn't look quite right — please check it."),
+      message: z
+        .string({ error: 'Please write a short message.' })
+        .trim()
+        .min(10, 'Please add a little more detail — a sentence or two is plenty.')
+        .max(5000, 'Your message is a little long. Please keep it under 5,000 characters.'),
       // Honeypot — hidden from real users, so anything here means a bot.
       website: z.string().optional(),
       // Time trap — set by the client when the form is first rendered.
-      startedAt: z.coerce.number().optional(),
+      // .catch() so a malformed value just skips the check instead of
+      // producing a validation error for a field the visitor can't see.
+      startedAt: z.coerce.number().optional().catch(undefined),
     }),
     handler: async ({ name, email, message, website, startedAt }) => {
       // Report success to bots rather than an error, so a probe learns
@@ -70,7 +87,7 @@ export const server = {
           from: CONTACT_FROM_EMAIL ?? RESEND_SANDBOX_SENDER,
           to: recipient,
           reply_to: email,
-          subject: `Portfolio message from ${name}`,
+          subject: `[LEAD] message from ${name}`,
           text: `From: ${name} <${email}>\n\n${message}`,
         }),
       });
