@@ -10,6 +10,13 @@ export interface Experience {
 
 export const experience: Experience[] = [
   {
+    role: 'WordPress Developer',
+    company: 'Samuel Digital',
+    period: 'Aug 2026 – Present',
+    description:
+      'Build and revamp WordPress websites for flooring and concrete coating contractors worldwide, moving them off generic Elementor/Astra templates and into custom-coded themes built for speed, conversions, and search visibility. Recent work with clients like Coastal Resin Resurface has driven measurable growth in organic Google Search leads, turning their websites into an actual sales channel.',
+  },
+  {
     role: 'Contributor',
     company: 'BetterAllen (LGU of Allen)',
     period: 'April 2026 – Present',
